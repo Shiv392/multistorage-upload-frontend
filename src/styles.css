@@ -1,1 +1,70 @@
-/* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
+@plugin "tailwindcss-primeui";
+@import "primeicons/primeicons.css";
+
+@import "tailwindcss";
+@plugin "tailwindcss-primeui";
+@import "primeicons/primeicons.css";
+
+@theme {
+	--color-ink: #12203a;
+	--color-paper: #f3f6fb;
+	--color-line: #dbe3ef;
+	--color-mute: #5b6b86;
+	--color-disk: #a86f00;
+	--color-db: #0f9d8f;
+	--color-s3: #5b5bf0;
+
+	--font-display: 'Bricolage Grotesque', 'Instrument Sans', system-ui, sans-serif;
+	--font-body: 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+	--animate-rise: up 0.8s var(--d, 0ms) cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+	--animate-reveal: up 0.8s calc(var(--i, 0) * 100ms) cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+	--animate-drift-a: drift 14s ease-in-out infinite alternate;
+	--animate-drift-b: drift 18s ease-in-out infinite alternate-reverse;
+	--animate-land: land 0.6s 1.6s backwards;
+	--animate-flash: flash 1s 1.6s backwards;
+	--animate-go-y: go-y 0.7s var(--pd, 0s) ease-in forwards;
+	--animate-go-x: go-x 0.7s var(--pd, 0s) ease-in forwards;
+
+	@keyframes up {
+		from { opacity: 0; transform: translateY(22px); }
+	}
+	@keyframes drift {
+		to { transform: translate(30px, 24px) scale(1.12); }
+	}
+	@keyframes land {
+		from { background: #fff; border-color: var(--color-line); }
+		60% { transform: scale(1.08); }
+	}
+	@keyframes flash {
+		from { background: #fff; }
+	}
+	@keyframes go-y {
+		0% { top: 0; opacity: 0; }
+		15%, 85% { opacity: 1; }
+		100% { top: calc(100% - 8px); opacity: 0; }
+	}
+	@keyframes go-x {
+		0% { left: 0; opacity: 0; }
+		15%, 85% { opacity: 1; }
+		100% { left: calc(100% - 8px); opacity: 0; }
+	}
+}
+
+[data-tone='disk'] { --tone: var(--color-disk); --tone-soft: #fff3d1; }
+[data-tone='db']   { --tone: var(--color-db);   --tone-soft: #dcf5f1; }
+[data-tone='s3']   { --tone: var(--color-s3);   --tone-soft: #e6e6ff; }
+
+a:focus-visible,
+button:focus-visible {
+	outline: 2px solid var(--color-db);
+	outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*, *::before, *::after {
+		animation: none !important;
+		transition: none !important;
+	}
+}
