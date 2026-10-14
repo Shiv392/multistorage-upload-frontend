@@ -1,0 +1,284 @@
+<div class="min-h-screen overflow-x-clip bg-paper font-body text-ink">
+  <!-- Navigation -->
+  <nav class="sticky top-0 z-30 border-b border-line bg-paper/85 backdrop-blur-[10px]">
+    <div class="mx-auto flex max-w-6xl items-center justify-between px-5 py-3">
+      <a href="#top" class="font-display text-[1.15rem] font-bold tracking-tight" (click)="go('top', $event)">storage<span class="text-db">-</span>showdown</a>
+      <div class="order-3 flex w-full items-center justify-center gap-5 border-t border-line pt-3 text-xs sm:gap-7 sm:text-sm md:order-none md:w-auto md:border-0 md:pt-0">
+        <a class="text-mute transition-colors hover:text-ink" href="#storage" (click)="go('storage', $event)">The three ways</a>
+        <a class="text-mute transition-colors hover:text-ink" href="#compare" (click)="go('compare', $event)">Compare</a>
+        <a class="text-mute transition-colors hover:text-ink" href="#flow" (click)="go('flow', $event)">How it works</a>
+      </div>
+      <a
+        class="inline-flex cursor-pointer items-center gap-2 rounded-full border border-line bg-white px-[1.15rem] py-[0.65rem] text-[0.9rem] font-semibold transition duration-200 hover:border-ink"
+        href="https://github.com/Shiv392/multistorage-upload-frontend"
+        target="_blank"
+        rel="noopener"
+      >
+        <i class="pi pi-github"></i> GitHub
+      </a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section id="top" class="relative mx-auto grid max-w-6xl scroll-mt-16 items-center gap-12 px-5 pb-20 pt-14 lg:grid-cols-2 lg:pt-20">
+    <div class="relative z-10">
+      <p class="mb-4 inline-flex items-center gap-2 rounded-full border border-line bg-white px-3 py-1.5 text-xs font-semibold uppercase text-mute">
+        <span class="size-2 rounded-full bg-db"></span> One upload, three storage strategies
+      </p>
+      <h1 class="animate-rise font-display text-5xl font-bold leading-[1.04] sm:text-6xl lg:text-7xl [animation-delay:0ms]">
+        One file,<br />three places to keep it.
+      </h1>
+      <p class="mt-6 max-w-lg animate-rise text-lg text-mute [animation-delay:120ms]">
+        storage-showdown sends the same upload to your server's disk, to your database and to a cloud bucket, so you can see what each choice costs you.
+      </p>
+      <div class="mt-8 flex animate-rise flex-wrap gap-3 [animation-delay:220ms]">
+        <a
+          class="inline-flex cursor-pointer items-center gap-2 rounded-full bg-ink px-[1.15rem] py-[0.65rem] text-[0.9rem] font-semibold text-white transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_12px_24px_-12px_var(--color-ink)]"
+          routerLink="/upload"
+        >
+          <i class="pi pi-upload"></i> Try an upload
+        </a>
+        <a
+          class="inline-flex cursor-pointer items-center gap-2 rounded-full border border-line bg-white px-[1.15rem] py-[0.65rem] text-[0.9rem] font-semibold transition duration-200 hover:border-ink"
+          href="#storage"
+          (click)="go('storage', $event)"
+        >
+          See the three ways
+        </a>
+      </div>
+      <p class="mt-8 animate-rise text-sm text-mute [animation-delay:320ms]">
+        Angular on the front, Spring Boot in the middle, PostgreSQL on Supabase underneath.
+      </p>
+    </div>
+
+    <!-- Upload simulator -->
+    <div class="relative z-10 animate-rise [animation-delay:180ms]">
+      @let s = current();
+      <div
+        class="rounded-3xl border border-line bg-white p-4 shadow-[0_30px_60px_-30px_rgba(18,32,58,0.35)]"
+        [attr.data-tone]="s.id"
+      >
+        <div class="grid grid-cols-3 gap-1 rounded-full bg-paper p-1" role="tablist" aria-label="Storage type">
+          @for (o of stores; track o.id) {
+            <button
+              type="button"
+              role="tab"
+              class="flex cursor-pointer items-center justify-center gap-1.5 rounded-full px-2 py-[0.55rem] text-[0.88rem] font-semibold transition-all duration-300"
+              [class]="o.id === s.id ? 'bg-(--tone) text-white shadow-[0_6px_16px_-6px_var(--tone)]' : 'text-mute hover:text-ink'"
+              [attr.aria-selected]="o.id === s.id"
+              [attr.data-tone]="o.id"
+              (click)="pick(o.id)"
+            >
+              <i class="pi" [class]="o.icon"></i> {{ o.name }}
+            </button>
+          }
+        </div>
+
+        @for (n of [run()]; track n) {
+          <div class="mb-4 mt-5 flex flex-col sm:flex-row">
+            <div class="flex min-w-0 flex-1 flex-col items-center gap-0.5 rounded-2xl border border-line bg-white px-2 py-[0.7rem] text-center">
+              <i class="pi pi-image text-xl"></i>
+              <b class="text-[0.85rem]">photo.png</b>
+              <small class="text-[0.68rem] text-mute [overflow-wrap:anywhere]">200 KB</small>
+            </div>
+
+            <div class="relative mx-auto h-10 w-0.5 bg-line sm:mx-0 sm:h-0.5 sm:w-10 sm:flex-none sm:self-center">
+              <span
+                class="absolute left-1/2 top-0 -ml-1 size-2.5 animate-go-y rounded-full bg-(--tone) opacity-0 shadow-[0_0_0_4px_color-mix(in_srgb,var(--tone)_25%,transparent)] sm:left-0 sm:top-1/2 sm:ml-0 sm:-mt-1 sm:animate-go-x"
+                class="[--pd:200ms]"
+              ></span>
+            </div>
+
+            <div class="flex min-w-0 flex-1 flex-col items-center gap-0.5 rounded-2xl border border-line bg-white px-2 py-[0.7rem] text-center">
+              <i class="pi pi-server text-xl"></i>
+              <b class="text-[0.85rem]">Spring Boot</b>
+              <small class="text-[0.68rem] text-mute [overflow-wrap:anywhere]">POST /api/files/{{ s.endpoint }}</small>
+            </div>
+
+            <div class="relative mx-auto h-10 w-0.5 bg-line sm:mx-0 sm:h-0.5 sm:w-10 sm:flex-none sm:self-center">
+              <span
+                class="absolute left-1/2 top-0 -ml-1 size-2.5 animate-go-y rounded-full bg-(--tone) opacity-0 shadow-[0_0_0_4px_color-mix(in_srgb,var(--tone)_25%,transparent)] sm:left-0 sm:top-1/2 sm:ml-0 sm:-mt-1 sm:animate-go-x"
+                class="[--pd:900ms]"
+              ></span>
+            </div>
+
+            <div class="flex min-w-0 flex-1 animate-land flex-col items-center gap-0.5 rounded-2xl border border-(--tone) bg-(--tone-soft) px-2 py-[0.7rem] text-center">
+              <i class="pi text-xl text-(--tone)" [class]="s.icon"></i>
+              <b class="text-[0.85rem]">{{ s.name }}</b>
+              <small class="text-[0.68rem] text-mute [overflow-wrap:anywhere]">{{ s.where }}</small>
+            </div>
+          </div>
+
+          <p class="mx-1 mb-1.5 mt-1 text-[0.78rem] text-mute">Row saved in PostgreSQL</p>
+          <dl class="overflow-hidden rounded-2xl border border-line font-mono text-[0.76rem]">
+            @for (r of s.row; track r.k) {
+              <div
+                class="flex justify-between gap-4 border-t border-line px-3 py-1.5 first:border-t-0"
+                [class]="r.hot ? 'animate-flash bg-(--tone-soft) font-bold' : ''"
+              >
+                <dt class="text-mute">{{ r.k }}</dt>
+                <dd class="text-right [overflow-wrap:anywhere]">{{ r.v }}</dd>
+              </div>
+            }
+          </dl>
+        }
+
+        <div class="mt-3 flex items-center justify-between text-xs text-mute">
+          <span>{{ auto() ? 'Cycling through the options' : 'Tap an option to compare' }}</span>
+          <button type="button" class="group inline-flex cursor-pointer items-center gap-1.5 font-semibold text-ink" (click)="replay()">
+            <i class="pi pi-replay group-hover:animate-spin"></i> Send again
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- The three ways -->
+  <section id="storage" class="mx-auto max-w-6xl scroll-mt-16 px-5 py-20">
+    <div class="reveal max-w-2xl opacity-0 [&.in]:animate-reveal [&.in]:opacity-100">
+      <h2 class="font-display text-3xl font-bold leading-tight sm:text-4xl">Three ways to keep an upload</h2>
+      <p class="mt-3 text-mute">Each one answers the same question differently: where do the bytes go?</p>
+    </div>
+
+    <div class="mt-10 grid gap-6 md:grid-cols-3">
+      @for (o of stores; track o.id; let i = $index) {
+        <article
+          class="reveal group relative flex flex-col gap-[1.1rem] overflow-hidden rounded-lg border border-line bg-white p-6 opacity-0 transition-[transform,box-shadow,border-color] duration-200 ease-out hover:-translate-y-1 hover:border-(--tone) hover:shadow-[0_24px_40px_-24px_var(--tone)] [&.in]:animate-reveal [&.in]:opacity-100"
+          [attr.data-tone]="o.id"
+        >
+          <div class="flex items-start gap-4">
+            <span class="grid size-12 flex-none place-items-center rounded-2xl bg-(--tone-soft) text-xl text-(--tone) transition-transform duration-300 group-hover:rotate-[-8deg] group-hover:scale-110">
+              <i class="pi" [class]="o.icon"></i>
+            </span>
+            <div>
+              <h3 class="font-display text-xl font-bold tracking-tight">{{ o.name }} storage</h3>
+              <p class="mt-1 text-sm text-mute">{{ o.tagline }}</p>
+            </div>
+          </div>
+
+          <ul class="grid gap-2 text-[0.92rem]">
+            @for (p of o.pros; track p) {
+              <li class="flex items-start gap-2.5"><i class="pi pi-check mt-1 text-xs text-[#17803d]"></i>{{ p }}</li>
+            }
+            @for (c of o.cons; track c) {
+              <li class="flex items-start gap-2.5"><i class="pi pi-times mt-1 text-xs text-[#b4372f]"></i>{{ c }}</li>
+            }
+          </ul>
+
+          <p class="text-sm"><b>Best for:</b> {{ o.best }}</p>
+
+          <button
+            type="button"
+            class="mt-auto inline-flex cursor-pointer items-center gap-2 self-start rounded-full border border-(--tone) bg-(--tone-soft) px-[1.15rem] py-[0.65rem] text-[0.9rem] font-semibold transition duration-200 hover:bg-(--tone) hover:text-white"
+            (click)="watch(o.id)"
+          >
+            <i class="pi pi-play"></i> Watch it travel
+          </button>
+        </article>
+      }
+    </div>
+  </section>
+
+  <!-- Comparison -->
+  <section id="compare" class="mx-auto max-w-6xl scroll-mt-16 px-5 pb-20">
+    <div class="reveal max-w-2xl opacity-0 [&.in]:animate-reveal [&.in]:opacity-100">
+      <h2 class="font-display text-3xl font-bold leading-tight sm:text-4xl">Side by side</h2>
+      <p class="mt-3 text-mute">Hover a column to follow one option down the list.</p>
+    </div>
+
+    <div class="reveal mt-8 overflow-x-auto rounded-2xl border border-line bg-white opacity-0 [&.in]:animate-reveal [&.in]:opacity-100">
+      <table class="w-full min-w-[640px] text-left text-sm">
+        <thead>
+          <tr>
+            <th class="px-4 py-[0.9rem]"></th>
+            @for (o of stores; track o.id; let i = $index) {
+              <th
+                class="px-4 py-[0.9rem] font-bold text-(--tone) transition-colors duration-200"
+                [class]="hot() === i ? 'bg-paper' : ''"
+                [attr.data-tone]="o.id"
+              >
+                <i class="pi mr-2" [class]="o.icon"></i>{{ o.name }}
+              </th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (r of compare; track r.q) {
+            <tr>
+              <th scope="row" class="border-t border-line px-4 py-[0.9rem] font-semibold">{{ r.q }}</th>
+              @for (c of r.v; track $index; let i = $index) {
+                <td
+                  class="border-t border-line px-4 py-[0.9rem] transition-colors duration-200"
+                  [class]="hot() === i ? 'bg-paper' : ''"
+                  (mouseenter)="hot.set(i)"
+                  (mouseleave)="hot.set(null)"
+                >
+                  <span
+                    class="mr-2 inline-block size-[0.6rem] rounded-full data-[l=bad]:bg-[#d64545] data-[l=good]:bg-[#22a05a] data-[l=ok]:bg-[#e0a100]"
+                    [attr.data-l]="c[0]"
+                  ></span
+                  >{{ c[1] }}
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Flow -->
+  <section id="flow" class="scroll-mt-16 bg-ink text-white">
+    <div class="mx-auto max-w-6xl px-5 py-20">
+      <h2 class="reveal font-display text-3xl font-bold leading-tight opacity-0 sm:text-4xl [&.in]:animate-reveal [&.in]:opacity-100">
+        What happens when you press upload
+      </h2>
+      <ol
+        class="reveal relative mt-12 grid list-none gap-8 p-0 opacity-0 md:grid-cols-5 md:before:absolute md:before:inset-x-5 md:before:top-[1.2rem] md:before:h-0.5 md:before:origin-left md:before:scale-x-0 md:before:bg-linear-to-r md:before:from-disk md:before:via-db md:before:to-s3 md:before:transition-transform md:before:delay-200 md:before:duration-[1600ms] md:[&.in]:before:scale-x-100 [&.in]:animate-reveal [&.in]:opacity-100"
+      >
+        @for (st of steps; track st.t; let i = $index) {
+          <li class="relative pl-14 md:pl-0">
+            <span class="absolute left-0 top-0 grid size-10 place-items-center rounded-full bg-white font-bold text-ink md:relative md:mb-3.5">{{ i + 1 }}</span>
+            <h3 class="font-display text-[1.05rem] font-bold tracking-tight">{{ st.t }}</h3>
+            <p class="mt-1 text-[0.9rem] text-[#b7c3da]">{{ st.d }}</p>
+          </li>
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- Closing -->
+  <section class="mx-auto max-w-6xl px-5 py-20">
+    <div class="reveal rounded-lg bg-linear-to-br from-ink to-[#1f4068] p-7 text-center text-white opacity-0 sm:p-12 [&.in]:animate-reveal [&.in]:opacity-100">
+      <h2 class="font-display text-3xl font-bold leading-tight sm:text-4xl">Same photo. Three uploads. Compare them yourself.</h2>
+      <p class="mx-auto mt-4 max-w-xl text-[#c5d2ea]">
+        Upload one image to each endpoint, then check the database size, the response time and what survives a restart.
+      </p>
+      <div class="mt-8 flex flex-wrap justify-center gap-3">
+        <a
+          class="inline-flex cursor-pointer items-center gap-2 rounded-full bg-white px-[1.15rem] py-[0.65rem] text-[0.9rem] font-semibold text-ink transition duration-200 hover:-translate-y-0.5"
+          routerLink="/upload"
+        >
+          <i class="pi pi-upload"></i> Try an upload
+        </a>
+        <a
+          class="inline-flex cursor-pointer items-center gap-2 rounded-full border border-white/40 px-[1.15rem] py-[0.65rem] text-[0.9rem] font-semibold text-white transition duration-200 hover:bg-white/10"
+          href="https://github.com/Shiv392/multistorage-upload-frontend"
+          target="_blank"
+          rel="noopener"
+        >
+          <i class="pi pi-github"></i> View the code
+        </a>
+      </div>
+      <div class="mt-10 flex flex-wrap justify-center gap-2">
+        @for (t of stack; track t) {
+          <span class="rounded-full border border-white/25 px-3 py-1 text-[0.8rem] transition-colors hover:bg-white/10">{{ t }}</span>
+        }
+      </div>
+    </div>
+  </section>
+
+  <footer class="border-t border-line px-5 py-8 text-center text-sm text-mute">
+    Built while learning how uploads work, from Angular to Spring Boot to storage.
+  </footer>
+</div>
