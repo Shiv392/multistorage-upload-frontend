@@ -1,0 +1,26 @@
+<aside class="navigation-rail" aria-label="Upload navigation">
+	<a class="brand" routerLink="/home" aria-label="Storage console home">
+		<span class="brand-mark" aria-hidden="true"><i class="pi pi-cloud"></i></span>
+		<span class="brand-copy">
+			<strong>STORAGE</strong>
+			<span>Upload console</span>
+		</span>
+	</a>
+
+	<div class="menu-heading">Upload destinations</div>
+	<p-menu [model]="menuItems" styleClass="storage-menu">
+		<ng-template #item let-item>
+			<a
+				class="p-menu-item-link"
+				[routerLink]="item.routerLink"
+				routerLinkActive="is-active"
+				[routerLinkActiveOptions]="{ exact: true }"
+				#activeLink="routerLinkActive"
+				[attr.aria-current]="activeLink.isActive ? 'page' : null"
+			>
+				<i [class]="item.icon + ' p-menu-item-icon'" aria-hidden="true"></i>
+				<span class="p-menu-item-label">{{ item.label }}</span>
+			</a>
+		</ng-template>
+	</p-menu>
+</aside>

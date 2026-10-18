@@ -1,0 +1,90 @@
+<section class="photo-workspace" aria-labelledby="workspace-title">
+	<header class="workspace-header">
+		<div>
+			<p class="eyebrow"><i class="pi pi-server" aria-hidden="true"></i>STORAGE UPLOAD CONSOLE</p>
+			<h1 id="workspace-title">Photo workspace</h1>
+			<p class="workspace-subtitle">Keep your image collection in one place.</p>
+		</div>
+		<div class="photo-count" aria-live="polite">
+			<i class="pi pi-images" aria-hidden="true"></i>
+			<span>{{ photos.length }} {{ photos.length === 1 ? 'photo' : 'photos' }}</span>
+		</div>
+	</header>
+
+	<div
+		class="upload-zone"
+		[class.is-dragging]="isDragging"
+		(dragover)="onDragOver($event)"
+		(dragleave)="onDragLeave($event)"
+		(drop)="onDrop($event)"
+	>
+		<input
+			#photoPicker
+			class="visually-hidden"
+			type="file"
+			accept="image/png,image/jpeg,.png,.jpg,.jpeg"
+			multiple
+			aria-label="Choose PNG or JPG photos"
+			(change)="onFilesSelected($event)"
+		>
+		<span class="upload-icon" aria-hidden="true"><i class="pi pi-cloud-upload"></i></span>
+		<div class="upload-copy">
+			<h2>Bring in your photos</h2>
+			<p>Drop images here, or choose them from your device.</p>
+			<span class="file-rules">PNG or JPG <span aria-hidden="true">·</span> Up to 2 MB per photo</span>
+		</div>
+		<button class="choose-button" type="button" (click)="photoPicker.click()">
+			<i class="pi pi-plus" aria-hidden="true"></i>
+			<span>Choose photos</span>
+		</button>
+	</div>
+
+	@if (validationMessages.length) {
+		<div class="validation-messages" role="alert">
+			@for (message of validationMessages; track $index) {
+				<p><i class="pi pi-exclamation-circle" aria-hidden="true"></i>{{ message }}</p>
+			}
+		</div>
+	}
+
+	<div class="gallery-heading">
+		<div>
+			<p class="eyebrow">YOUR COLLECTION</p>
+			<h2>All photos</h2>
+		</div>
+		@if (photos.length) {
+			<span class="collection-count">{{ photos.length }} items</span>
+		}
+	</div>
+
+	@if (photos.length) {
+		<div class="photo-grid">
+			@for (photo of photos; track photo.id) {
+				<article class="photo-card">
+					<img [src]="photo.previewUrl" [alt]="photo.file.name" loading="lazy">
+					<div class="photo-details">
+						<div class="photo-name">
+							<strong [title]="photo.file.name">{{ photo.file.name }}</strong>
+							<span>{{ (photo.file.size / 1024).toFixed(0) }} KB</span>
+						</div>
+						<button
+							class="remove-button"
+							type="button"
+							[attr.aria-label]="'Remove ' + photo.file.name"
+							title="Remove photo"
+							(click)="removePhoto(photo.id)"
+						>
+							<i class="pi pi-trash" aria-hidden="true"></i>
+						</button>
+					</div>
+				</article>
+			}
+		</div>
+	} @else {
+		<div class="empty-gallery">
+			<span class="empty-icon" aria-hidden="true"><i class="pi pi-images"></i></span>
+			<h3>Your collection starts here</h3>
+			<p>Photos you add will appear in this grid.</p>
+		</div>
+	}
+</section>
