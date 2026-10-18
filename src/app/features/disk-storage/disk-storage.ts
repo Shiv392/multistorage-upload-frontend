@@ -1,9 +1,15 @@
-import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, OnDestroy } from '@angular/core';
+import { Workspace } from '../workspace/workspace';
+
+
 
 @Component({
-  imports: [],
+  imports: [CommonModule, Workspace],
   selector: 'app-disk-storage',
   styleUrl: './disk-storage.css',
   templateUrl: './disk-storage.html',
 })
-export class DiskStorage {}
+export class DiskStorage{
+
+}

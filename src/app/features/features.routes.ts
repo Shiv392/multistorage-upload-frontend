@@ -7,6 +7,7 @@ export const featureRoutes: Routes = [
     },
     {
         path: 'upload',
+        loadComponent: ()=> import("./layout/layout").then(m=> m.Layout),
         children: [
             {
                 path: '',
