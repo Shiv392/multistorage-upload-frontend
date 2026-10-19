@@ -91,8 +91,51 @@ export class Workspace implements OnChanges, OnDestroy {
   }
 
   addFiles(files: File[]): void {
+      this.validationMessages = [];
 
+  for (const file of files) {
+    if (!this.isSupportedImage(file)) {
+      this.validationMessages.push(`${file.name}: only PNG or JPG is allowed`);
+      continue;
+    }
+    if (file.size > this.maxFileSize) {
+      this.validationMessages.push(`${file.name}: must be 2 MB or smaller`);
+      continue;
+    }
+    this.uploadFile(file);
   }
+  this.cdr.markForCheck();
+  }
+
+  private uploadFile(file: File): void {
+  this.loading = true;
+  const apibody = {
+    endpoint : this.apiEndpoint || '',
+    file : file
+  }
+  console.log("apibody----------->", apibody);
+  this.workspaceService.uploadPhoto(apibody).pipe(takeUntil(this.subject$)).subscribe({
+    next: (res) => {
+      if (res?.success && res.data) {
+        const saved: PhotoPreview = {
+          ...res.data,
+          previewUrl: URL.createObjectURL(file),   // bytes wapas nahi aate, local preview dikhao
+        };
+        this.photos = [saved, ...this.photos];      // naya sabse upar
+      } else {
+        this.validationMessages = [...this.validationMessages, `${file.name}: ${res?.message ?? 'upload failed'}`];
+      }
+      this.loading = false;
+      this.cdr.markForCheck();
+    },
+    error: (err) => {
+      const msg = err?.error?.message ?? 'upload failed';
+      this.validationMessages = [...this.validationMessages, `${file.name}: ${msg}`];
+      this.loading = false;
+      this.cdr.markForCheck();
+    },
+  });
+}
 
   removePhoto(photoId: number): void {
 
