@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Workspace } from '../workspace/workspace';
+import { Controller } from '../../utils/Controller';
 
 @Component({
   imports: [Workspace],
@@ -7,4 +8,7 @@ import { Workspace } from '../workspace/workspace';
   styleUrl: './db-storage.css',
   templateUrl: './db-storage.html',
 })
-export class DbStorage {}
+export class DbStorage {
+
+  public controller = inject(Controller);
+}

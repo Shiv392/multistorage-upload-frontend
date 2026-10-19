@@ -1,12 +1,16 @@
-import { Component } from '@angular/core';
-
+import { ChangeDetectorRef, Component, inject, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
+import { WorkspaceService } from '../services/workspace.service';
+import { Subject, takeUntil } from 'rxjs';
 
 interface PhotoPreview {
   id: number;
-  file: File;
-  previewUrl: string;
+  name: string;
+  contentType: string;
+  data?: string;          // base64 (abhi response me aa rahi hai)
+  size: number;
+  description: string | null;
+  createdAt: string;
 }
-
 @Component({
   imports: [],
   selector: 'app-workspace',
@@ -14,13 +18,51 @@ interface PhotoPreview {
   templateUrl: './workspace.html',
 })
 
+export class Workspace implements OnChanges, OnDestroy {
 
-export class Workspace {
+  @Input() apiEndpoint:string|null = null;
+  @Input() loading = false;
+
+  private workspaceService = inject(WorkspaceService);
+  private cdr = inject(ChangeDetectorRef);
+
   readonly maxFileSize = 2 * 1024 * 1024;
   photos: PhotoPreview[] = [];
   validationMessages: string[] = [];
   isDragging = false;
-  private nextPhotoId = 0;
+
+  private subject$ = new Subject<void>();
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes['apiEndpoint']){
+      console.log("api endpoint", this.apiEndpoint);
+
+      if(this.apiEndpoint!=null){
+        this.getAllPhotos();
+      }
+    }
+  }
+
+  public getAllPhotos(): void{
+    this.loading = true;
+    const apibody = {
+      endpoint: this.apiEndpoint || ''
+    }
+    this.workspaceService.getPhotos(apibody).pipe(takeUntil(this.subject$)).subscribe({
+      next : (res)=>{
+        if(res?.success){
+          this.photos = [...res.data ?? []];
+        }
+        
+        this.loading = false;
+        this.cdr.markForCheck();
+      },
+      error : ()=>{
+        this.loading = false;
+         this.cdr.markForCheck();
+      }
+    })
+  }
 
   onFilesSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -49,45 +91,21 @@ export class Workspace {
   }
 
   addFiles(files: File[]): void {
-    const messages: string[] = [];
 
-    for (const file of files) {
-      if (!this.isSupportedImage(file)) {
-        messages.push(`${file.name}: choose a PNG or JPG image.`);
-        continue;
-      }
-
-      if (file.size > this.maxFileSize) {
-        messages.push(`${file.name}: the file exceeds the 2 MB limit.`);
-        continue;
-      }
-
-      this.photos = [
-        ...this.photos,
-        {
-          id: this.nextPhotoId++,
-          file,
-          previewUrl: URL.createObjectURL(file),
-        },
-      ];
-    }
-
-    this.validationMessages = messages;
   }
 
   removePhoto(photoId: number): void {
-    const photo = this.photos.find(({ id }) => id === photoId);
-    if (photo) {
-      URL.revokeObjectURL(photo.previewUrl);
-      this.photos = this.photos.filter(({ id }) => id !== photoId);
-    }
+
   }
 
   ngOnDestroy(): void {
-    for (const photo of this.photos) {
-      URL.revokeObjectURL(photo.previewUrl);
-    }
+    this.subject$.next();
+    this.subject$.complete();
   }
+
+  photoSrc(photo: PhotoPreview): string {
+  return `data:${photo.contentType};base64,${photo.data}`;
+}
 
   private isSupportedImage(file: File): boolean {
     const extension = file.name.split('.').pop()?.toLowerCase();
