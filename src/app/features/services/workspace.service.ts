@@ -35,4 +35,15 @@ export class WorkspaceService{
             })
         )
     }
+
+    public removePhoto(apibody : {endpoint: string, id : number}): Observable<any>{
+        const url = this.environment.domainURL + apibody.endpoint + `/${apibody.id}`;
+
+        return this.http.delete<any>(url)
+        .pipe(
+            catchError((error : HttpErrorResponse)=>{
+                return throwError(()=> error.error)
+            })
+        )
+    }
 }
