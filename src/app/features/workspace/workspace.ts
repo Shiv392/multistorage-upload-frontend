@@ -113,7 +113,6 @@ export class Workspace implements OnChanges, OnDestroy {
     endpoint : this.apiEndpoint || '',
     file : file
   }
-  console.log("apibody----------->", apibody);
   this.workspaceService.uploadPhoto(apibody).pipe(takeUntil(this.subject$)).subscribe({
     next: (res) => {
       if (res?.success && res.data) {
@@ -138,7 +137,25 @@ export class Workspace implements OnChanges, OnDestroy {
 }
 
   removePhoto(photoId: number): void {
+    if(!photoId) return;
 
+    const index = this.photos.findIndex(ele=> ele.id == photoId);
+
+    this.loading = true;
+    const apibody = {
+      endpoint : this.apiEndpoint || '',
+      id : photoId
+    }
+
+    this.workspaceService.removePhoto(apibody).pipe(takeUntil(this.subject$))
+    .subscribe({
+      next: (res:{success : boolean, message : string})=>{
+        this.getAllPhotos();
+      },
+      error : ()=>{
+        this.loading = false;
+      }
+    })
   }
 
   ngOnDestroy(): void {
