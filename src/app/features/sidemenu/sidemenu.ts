@@ -22,9 +22,14 @@ export class Sidemenu {
       routerLink: ['/upload/db-storage'],
     },
     {
-      label: 'AWS S3 Bucket upload',
+      label: 'S3 Bucket Server upload',
       icon: 'pi pi-cloud-upload',
-      routerLink: ['/upload/bucket-storage'],
+      routerLink: ['/upload/bucket-storage/bucket-server'],
+    },
+    {
+      label: 'S3 Bucket Client upload',
+      icon: 'pi pi-desktop',
+      routerLink: ['/upload/bucket-storage/bucket-client'],
     },
   ];
 }
