@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy } from '@angular/core';
+import { Component, inject, OnDestroy } from '@angular/core';
 import { Workspace } from '../workspace/workspace';
+import { Controller } from '../../utils/Controller';
 
 
 
@@ -11,5 +12,7 @@ import { Workspace } from '../workspace/workspace';
   templateUrl: './disk-storage.html',
 })
 export class DiskStorage{
+
+  public controller = inject(Controller);
 
 }
