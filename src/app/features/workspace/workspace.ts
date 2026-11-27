@@ -22,6 +22,7 @@ export class Workspace implements OnChanges, OnDestroy {
 
   @Input() apiEndpoint:string|null = null;
   @Input() loading = false;
+  @Input() from? : string = 'server'
 
   private workspaceService = inject(WorkspaceService);
   private cdr = inject(ChangeDetectorRef);
@@ -109,6 +110,8 @@ export class Workspace implements OnChanges, OnDestroy {
 
   private uploadFile(file: File): void {
   this.loading = true;
+
+  if(this.from == 'server'){
   const apibody = {
     endpoint : this.apiEndpoint || '',
     file : file
@@ -134,6 +137,28 @@ export class Workspace implements OnChanges, OnDestroy {
       this.cdr.markForCheck();
     },
   });
+  }
+
+  else if(this.from == 'aws-client'){
+    console.log("Get presigned url..........");
+    const fileName : string = this.workspaceService.getFileName(file.name);
+    const file_ext: string = this.workspaceService.getFileExtension(file.name);
+
+    this.workspaceService.getPreSignedURL({endpoint : this.apiEndpoint || '', fileName : fileName, ext: file_ext})
+    .pipe(takeUntil(this.subject$))
+    .subscribe({
+      next : (res)=>{
+        console.log("res---------------->", res?.success);
+        if(res?.success){
+
+        }
+        this.loading = false;
+      },
+      error : ()=>{
+        this.loading = false;
+      }
+    })
+  }
 }
 
   removePhoto(photoId: number): void {

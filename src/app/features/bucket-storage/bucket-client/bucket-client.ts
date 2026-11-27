@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Workspace } from '../../workspace/workspace';
+import { Controller } from '../../../utils/Controller';
 
 @Component({
   imports: [Workspace],
@@ -7,4 +8,6 @@ import { Workspace } from '../../workspace/workspace';
   styleUrl: './bucket-client.css',
   templateUrl: './bucket-client.html',
 })
-export class BucketClient {}
+export class BucketClient {
+  public controller = inject(Controller);
+}
