@@ -9,5 +9,5 @@ export class Controller{
     public readonly bucketUpload : string = '/api/v1/db-storage/photos';
     public readonly serverBucketUpload: string = "/api/v1/bucket-storage/server-bucket/photo";
     public readonly clientBucketUpload: string = "/api/v1/bucket-storage/client-bucket/photo";
-
+    public readonly clientPreSignedUrlUpload: string = '/api/v1/bucket-storage/presigned-urls';
 }
