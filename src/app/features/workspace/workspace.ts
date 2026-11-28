@@ -148,18 +148,43 @@ export class Workspace implements OnChanges, OnDestroy {
     .pipe(takeUntil(this.subject$))
     .subscribe({
       next : (res)=>{
-        console.log("res---------------->", res?.success);
-        if(res?.success){
-
+        if (res?.success && res.data) {
+          this.uploadToPresignedUrl(file, res.data);
+        } else {
+          this.validationMessages = [
+            ...this.validationMessages,
+            `${file.name}: ${res?.message ?? 'could not create upload URL'}`,
+          ];
+          this.loading = false;
+          this.cdr.markForCheck();
         }
-        this.loading = false;
       },
-      error : ()=>{
+      error : (err)=>{
+        const msg = err?.message ?? err?.error?.message ?? 'could not create upload URL';
+        this.validationMessages = [...this.validationMessages, `${file.name}: ${msg}`];
         this.loading = false;
+        this.cdr.markForCheck();
       }
     })
   }
 }
+
+  private uploadToPresignedUrl(file: File, url: string): void {
+    this.workspaceService.uploadToPresignedUrl(url, file)
+      .pipe(takeUntil(this.subject$))
+      .subscribe({
+        next: (res : any) =>{
+          console.log("res after upload file into s3 bucket-------------------------->", res);
+          this.getAllPhotos()
+        },
+        error: (err) => {
+          const msg = err?.message ?? err?.error?.message ?? 'upload failed';
+          this.validationMessages = [...this.validationMessages, `${file.name}: ${msg}`];
+          this.loading = false;
+          this.cdr.markForCheck();
+        },
+      });
+  }
 
   removePhoto(photoId: number): void {
     if(!photoId) return;

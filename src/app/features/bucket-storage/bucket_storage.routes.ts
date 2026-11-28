@@ -11,7 +11,7 @@ export const BucketStorageRoutes: Routes = [
         loadComponent: () => import('./bucket-server/bucket-server').then((m) => m.BucketServer),
     },
     {
-        path: 'bucket-client',
+        path: 'pre-signed-url',
         loadComponent: () => import('./bucket-client/bucket-client').then((m) => m.BucketClient),
     },
 ];
