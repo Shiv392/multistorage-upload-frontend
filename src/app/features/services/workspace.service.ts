@@ -3,6 +3,12 @@ import { inject, Injectable } from "@angular/core";
 import { catchError, Observable, throwError } from "rxjs";
 import { Environment } from "../../utils/Environment";
 
+interface PresignedUrlResponse {
+    success: boolean;
+    data?: string;
+    message?: string;
+}
+
 @Injectable({
     providedIn : "root"
 })
@@ -57,14 +63,23 @@ export class WorkspaceService{
         )
     }
 
-    public getPreSignedURL(apibody: {endpoint: string, fileName:string, ext: string}): Observable<any>{
+    public getPreSignedURL(apibody: {endpoint: string, fileName:string, ext: string}): Observable<PresignedUrlResponse>{
         const url = this.environment.domainURL + apibody.endpoint + `/${apibody.fileName}.${apibody.ext}`;
 
-        return this.http.post<any>(url, null)
+        return this.http.post<PresignedUrlResponse>(url, null)
         .pipe(
             catchError((error : HttpErrorResponse)=>{
                 return throwError(()=> error.error)
             })
         )
     }
+
+   public uploadToPresignedUrl(url: string, file: File): Observable<string> {
+    return this.http.put(url, file, {
+        headers: {
+            'Content-Type': file.type
+        },
+        responseType: 'text'
+    });
+}
 }

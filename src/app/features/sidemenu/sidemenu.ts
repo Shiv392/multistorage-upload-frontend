@@ -29,7 +29,7 @@ export class Sidemenu {
     {
       label: 'S3 Bucket Client upload',
       icon: 'pi pi-desktop',
-      routerLink: ['/upload/bucket-storage/bucket-client'],
+      routerLink: ['/upload/bucket-storage/pre-signed-url'],
     },
   ];
 }
